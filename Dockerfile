@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 COPY --from=frontend /app/public ./public
 
+RUN composer update
 RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
 
 # EXPOSE 8000
