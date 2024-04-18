@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# wait for db to initialize
+echo "Staying idle waiting for db"
+sleep 30
+
 # Set application key
 php artisan key:generate
 
