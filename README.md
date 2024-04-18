@@ -102,6 +102,8 @@ To get a local copy up and running follow these simple steps.
 
 ## Usage
 
+### Bare Metal
+
 1. Make `.env` file by copy the `.env.example`
     ```sh
     cp .env.example .env
@@ -127,6 +129,30 @@ To get a local copy up and running follow these simple steps.
 6. Run the app
     ```sh
     php artisan serve
+    ```
+7. Try dummy account
+
+    ```dosini
+    # student
+    username = student@example.com
+    password = password
+
+    # lecturer
+    username = lecturer@example.ac.id
+    password = password
+    ```
+
+### Using Docker Compose
+
+1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+
+2. Run through steps 1 and 2 from [bare metal installation](#bare-metal)
+    ```dosini
+    DB_HOST=db
+    ```
+3. Start the containers
+    ```sh
+    docker compose up -d
     ```
 7. Try dummy account
 
