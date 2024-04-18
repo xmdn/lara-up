@@ -11,10 +11,8 @@ class Experience extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-    ];
-
-    protected $dates = [
-        'start_date', 'end_date'
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     public $timestamps = false;
