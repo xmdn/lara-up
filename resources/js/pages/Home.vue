@@ -142,15 +142,19 @@ export default {
     this.getHomeData()
 
     this.$nextTick(function () {
-      document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = 'unset'
+      const desktopNav = document.querySelector('.desktop-nav.nav-base');
+      if (desktopNav === null) {
+        return
+      }
+      desktopNav.boxShadow = 'unset'
       let app = document.querySelector('html')
       window.onscroll = () => {
         clearTimeout(this.debouncedScroll)
         this.debouncedScroll = setTimeout(() => {
           if (app.scrollTop > 0) {
-            document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = '0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.1)'
+            desktopNav.style.boxShadow = '0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.1)'
           } else {
-            document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = 'unset'
+            desktopNav.style.boxShadow = 'unset'
           }
         }, 50)
       }
@@ -163,7 +167,11 @@ export default {
 
     window.onscroll = null
 
-    document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = '0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.1)'
+    const desktopNav = document.querySelector('.desktop-nav.nav-base');
+    if (desktopNav === null) {
+      return
+    }
+    desktopNav .style.boxShadow = '0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.1)'
   },
 
   methods: {
