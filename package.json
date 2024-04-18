@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "mix watch --hot",
     "watch": "mix watch",
+    "build:dev": "mix",
     "build": "mix --production",
     "lint": "eslint --fix --ext .js,.vue resources/js"
   },

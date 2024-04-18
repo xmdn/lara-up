@@ -5,6 +5,7 @@ echo "Staying idle waiting for db"
 sleep 30
 
 # Set application key
+yes | php artisan jwt:secret
 php artisan key:generate
 
 # Create tables using migration with dummy data

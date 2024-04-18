@@ -9,10 +9,10 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npm run build:dev
 
 # Stage 2: Build Laravel backend
-FROM php:7.4-fpm as backend
+FROM php:8.1-fpm as backend
 
 WORKDIR /app
 
@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 COPY --from=frontend /app/public ./public
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer update
 RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
 
