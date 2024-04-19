@@ -159,7 +159,8 @@ mix.webpackConfig({
   resolve: {
     extensions: ['.js', '.json', '.vue'],
     alias: {
-      '~': join(__dirname, './resources/js')
+      vue: '@vue/compat',
+      '~': join(__dirname, './resources/js'),
     }
   },
   output: outputConfig
