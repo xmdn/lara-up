@@ -304,7 +304,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import * as timeago from 'timeago.js'
 
 export default {
@@ -448,6 +448,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getDetails () {
       await this.$store.dispatch('visit/fetchVisitedProject', {
         id: this.$route.params.id
@@ -469,7 +473,7 @@ export default {
       document.body.removeChild(el)
 
       this.copyText = 'Copied'
-      this.snackbar.open('Project link copied')
+      this.triggerSnackbar('Project link copied')
     },
 
     filterLink (link) {

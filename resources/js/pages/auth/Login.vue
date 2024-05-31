@@ -73,7 +73,7 @@
         <!-- Remember Me -->
         <div class="login-input--container">
           <label class="checkbox-container checkbox-container--post">Remember Me
-            <input v-model="remember" name="remember" type="checkbox">
+            <input v-model="form.remember" name="remember" type="checkbox">
             <span class="checkbox-checkmark checkbox-checkmark-remember" />
           </label>
         </div>
@@ -107,7 +107,8 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import auth from '../../store/modules/auth'
 
 export default {
   name: 'LoginPage',
@@ -125,14 +126,14 @@ export default {
     form: new Form({
       role: 'Student',
       email: '',
-      password: ''
+      password: '',
+      remember: false
     }),
-    remember: false
   }),
 
   computed: {
     ...mapGetters({
-      snackbar: 'notification/snackbar'
+      token: 'auth/token'
     }),
 
     role () {
@@ -165,16 +166,21 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async login () {
+      console.log('Store:', this.$store)
       const isLecturer = this.form.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?!.*(student)).*.ac.id.*$/)
 
       if (this.form.role === 'Lecturer' && !isLecturer) {
-        this.snackbar.open('You are likely not using a lecturer identity.')
+        this.triggerSnackbar('You are likely not using a lecturer identity.')
         this.chooseStudent()
         this.form.role = 'Student'
         return
       } else if (this.form.role === 'Student' && isLecturer) {
-        this.snackbar.open('You are likely using a lecturer identity. ')
+        this.triggerSnackbar('You are likely using a lecturer identity. ')
         this.chooseLecturer()
         this.form.role = 'Lecturer'
         return
@@ -182,14 +188,21 @@ export default {
 
       this.form.post('/api/login')
         .then(({ data }) => {
-          this.$store.dispatch('auth/saveToken', {
-            token: data.token,
-            remember: this.remember
-          })
-          this.$router.back()
+            this.$store.dispatch('auth/saveToken', {
+                token: data.token,
+                remember: this.form.remember
+            }).then(() => {
+                // Save token success
+                this.$store.dispatch('auth/fetchUser')
+                this.$router.back()
+            }).catch(error => {
+                // Handle save token error
+                console.error('Error saving token:', error)
+            })
         })
-        .catch(e => {
-          // console.log(e.response.data.message)
+        .catch(error => {
+            // Handle API login error
+            console.error('API login error:', error)
         })
     },
 

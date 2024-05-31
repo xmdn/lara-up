@@ -1,8 +1,10 @@
 function page(path) {
+  // console.log(path);
   return () => import(/* webpackChunkName: '' */ `~/pages/${path}`).then(m => m.default || m)
 }
 
 export default [
+
   { path: '/', name: 'index', component: page('Home.vue') },
   { path: '/login', name: 'login', meta: { title: 'Log In' }, component: page('auth/Login.vue') },
   { path: '/register', name: 'register', meta: { title: 'Register' }, component: page('auth/Register.vue') },
@@ -103,5 +105,5 @@ export default [
 
   { path: '/:url/404', name: '404', meta: { title: 'Error' }, component: page('errors/404.vue') },
 
-  { path: '*', meta: { title: 'Error' }, component: page('errors/404.vue') }
+  // { path: '/:catchAll(.*)', meta: { title: 'Error' }, component: page('errors/404.vue') }
 ]

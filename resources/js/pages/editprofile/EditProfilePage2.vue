@@ -203,7 +203,7 @@
 <script>
 import Form from 'vform'
 import { MonthPicker } from 'vue-month-picker'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import ExperienceItem from '~/components/ExperienceItem'
 import { serialize } from 'object-to-formdata'
 
@@ -257,6 +257,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async showSkills () {
       this.toggleOverlay()
     },
@@ -280,7 +284,7 @@ export default {
 
       await this.form.post('/api/user/saveprofile/2')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$store.dispatch('auth/updateUser', {
             user: data.user
           })
@@ -310,7 +314,7 @@ export default {
       let skillSet = new Set(oldSkills)
 
       if (skillSet.size > 20) {
-        this.snackbar.open('Can\'t add more than 20 skills')
+        this.triggerSnackbar('Can\'t add more than 20 skills')
         return
       }
 
@@ -375,10 +379,10 @@ export default {
             cv: data.cv
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
         .catch(e => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
         })
     },
 
@@ -389,7 +393,7 @@ export default {
             cv: null
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     }
 

@@ -29,7 +29,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   middleware: 'guest',
@@ -58,14 +58,18 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async reset () {
       this.form.post('/api/password/reset')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$router.push({ name: 'login' })
         })
         .catch(e => {
-          this.snackbar.open(e.response.data.email)
+          this.triggerSnackbar(e.response.data.email)
           this.$router.push({ name: 'password.request' })
         })
     }

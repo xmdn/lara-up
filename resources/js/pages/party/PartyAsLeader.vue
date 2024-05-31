@@ -22,7 +22,7 @@
 
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import MemberItem from '~/components/Party/MemberItem'
 
 export default {
@@ -41,6 +41,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async kick (index) {
       const member = this.party.leader.members[index]
 
@@ -49,7 +53,7 @@ export default {
         member_name: member.member.full_name
       }).then(({ data }) => {
         console.log(data)
-        this.snackbar.open(data.message)
+        this.triggerSnackbar(data.message)
         this.$store.dispatch('auth/updateUserParty', {
           leader: data.leader
         })

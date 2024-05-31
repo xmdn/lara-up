@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Foundation\Auth\RegistersUsers as BaseRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    use RegistersUsers;
+    use BaseRegistersUsers;
 
     /**
      * Create a new controller instance.
@@ -21,6 +21,31 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function baseRegister(Request $request)
+    {
+        // Validate the incoming request data
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            // If validation fails, return the validation errors
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Create a new user using the 'create' method
+        $user = $this->create($request->all());
+
+        // If the user instance is null (registration failed), return an error response
+        if (!$user) {
+            return response()->json(['error' => 'Registration failed'], 500);
+        }
+
+        // Perform any additional actions after successful registration
+        $this->registered($request, $user);
+
+        // Return a success response
+        return response()->json(['status' => 'Registration successful', 'user' => $user]);
     }
 
     /**

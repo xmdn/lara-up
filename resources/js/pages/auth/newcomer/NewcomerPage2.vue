@@ -197,7 +197,7 @@
 import Form from 'vform'
 import { MonthPicker } from 'vue-month-picker'
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import ExperienceItem from '~/components/ExperienceItem'
 
 export default {
@@ -247,6 +247,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async showSkills () {
       this.toggleOverlay()
     },
@@ -270,7 +274,7 @@ export default {
 
       await this.form.post('/api/user/saveprofile/2')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 
@@ -297,7 +301,7 @@ export default {
       let skillSet = new Set(oldSkills)
 
       if (skillSet.size > 20) {
-        this.snackbar.open('Can\'t add more than 20 skills')
+        this.triggerSnackbar('Can\'t add more than 20 skills')
         return
       }
 

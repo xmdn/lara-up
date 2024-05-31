@@ -37,7 +37,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   middleware: 'guest',
@@ -68,10 +68,14 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async send () {
       await this.form.post('/api/email/resend')
         .then(({ data }) => {
-          this.snackbar.open(data.status)
+          this.triggerSnackbar(data.status)
         })
 
       // this.$router.push({ name: 'login' })

@@ -228,7 +228,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 import CandidateItem from '~/components/CandidateItem'
 
@@ -301,6 +301,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async showDetails () {
       this.show = !this.show
     },
@@ -320,7 +324,7 @@ export default {
         await axios.post('/api/projectbox/cancelProjectInvitation', {
           individual_applicant_id: candidate.id
         }).then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.candidates.waitings.splice(applicant.index, 1)
           this.candidates.total = this.candidates.waitings.length + this.candidates.fixes.length + this.candidates.team.waitings.length + this.candidates.team.fixes.length
           this.candidates.agree = this.candidates.fixes.length + this.candidates.team.fixes.length
@@ -331,7 +335,7 @@ export default {
         await axios.post('/api/projectbox/cancelProjectInvitation', {
           team_applicant_id: candidate.id
         }).then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.candidates.team.waitings.splice(applicant.index, 1)
           this.candidates.total = this.candidates.waitings.length + this.candidates.fixes.length + this.candidates.team.waitings.length + this.candidates.team.fixes.length
           this.candidates.agree = this.candidates.fixes.length + this.candidates.team.fixes.length
@@ -341,7 +345,7 @@ export default {
 
     async startProject () {
       if ((this.candidates.agree !== this.candidates.total) || this.candidates.agree === 0) {
-        this.snackbar.open('We need others consent before start the project. Or you can cancel who still not respond the invitations.')
+        this.triggerSnackbar('We need others consent before start the project. Or you can cancel who still not respond the invitations.')
       } else {
         await axios.post('/api/projectbox/start', {
           project_id: this.data.project_id
@@ -358,7 +362,7 @@ export default {
         this.$store.dispatch('notification/updateProjectBox', {
           projectBoxes: data.project_boxes
         })
-        this.snackbar.open(data.message)
+        this.triggerSnackbar(data.message)
       })
     }
   }

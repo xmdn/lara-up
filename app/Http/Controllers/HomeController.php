@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    // private $leaderboard = null;
-    // private function __construct()
-    // {
-    //     $this->leaderboard = new Leaderboard();
-    // }
+    private $leaderboard = null;
+    public function __construct()
+    {
+        $this->leaderboard = new Leaderboard();
+    }
 
     public function index() {
-        $topDesigner = Leaderboard::with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'UI/UX Designer')->first();
-        $topFrontend = Leaderboard::with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Frontend Engineer')->first();
-        $topBackend = Leaderboard::with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Backend Engineer')->first();
-        $topData = Leaderboard::with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Data Expert')->first();
+        $topDesigner = $this->leaderboard->with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'UI/UX Designer')->first();
+        $topFrontend = $this->leaderboard->with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Frontend Engineer')->first();
+        $topBackend = $this->leaderboard->with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Backend Engineer')->first();
+        $topData = $this->leaderboard->with(['user:id,tagname,first_name,last_name,photo_url,email', 'user.finished_project:id,user_id,project_id'])->orderBy('points', 'desc')->where('expertise', 'Data Expert')->first();
 
         $projectByStatusCount = Project::select('status', DB::raw('count(*) as total'))->groupBy('status')->get()->groupBy('status');
         $projectByStatusCounts = [

@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -149,6 +149,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async showDetails () {
       this.show = !this.show
     },
@@ -159,7 +163,7 @@ export default {
         this.$store.dispatch('notification/updateProjectBox', {
           projectBoxes: data.project_boxes
         })
-        this.snackbar.open(data.message)
+        this.triggerSnackbar(data.message)
       })
     }
   }

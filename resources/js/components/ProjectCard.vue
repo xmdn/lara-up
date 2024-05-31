@@ -147,6 +147,11 @@ export default {
 
   methods: {
 
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
+
     getRewards: function ({ salary, currency, salaryAmount, paymentType, certificate, maxPerson }) {
       if (paymentType === 'person') salaryAmount = salaryAmount * maxPerson
       if (salary) {
@@ -170,7 +175,7 @@ export default {
         status: !isWished
       })
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$store.dispatch('auth/updateWishlists', {
             wishlists: data.wishlists
           })
@@ -182,7 +187,7 @@ export default {
             }
           }
         }).catch((e) => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
           this.$router.push({ name: 'login' })
           // console.log(error.response)
         })

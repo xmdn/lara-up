@@ -1,13 +1,23 @@
 import { createApp } from "vue";
 import store from "~/store";
-import Meta from "vue-meta";
-import { createRouter, createWebHistory } from "vue-router";
+// import Meta from "vue-meta";
+import { createMetaManager } from 'vue-meta'
+import { createRouter, createWebHistory, useRoute } from "vue-router";
 import routes from "./routes";
+import App from "~/components/App";
+import VueMatchMedia from '@webqam/vue-match-media'
+import Snackbar from 'vuejs-snackbar'
 
-const app = createApp();
+
+console.log('INDEX');
+
+const app = createApp(App);
+
+// console.log('ROUTE', useRoute());
 
 app.use(store);
-app.use(Meta);
+app.use(createMetaManager);
+app.component('snackbar', Snackbar)
 
 // The middleware for every page of the application.
 const globalMiddleware = ["check-auth"];
@@ -19,7 +29,23 @@ const routeMiddleware = resolveMiddleware(
 
 const router = makeRouter();
 
+
+const breakpoints = {
+  xs: '360px',
+  sm: '410px',
+  md: '768px',
+  lg: '992px',
+  xl: '1280px',
+  xxl: '1366px'
+}
+
+
+
+app.use(VueMatchMedia, { breakpoints: breakpoints })
+
 app.use(router);
+
+app.mount('#app');
 
 export default router;
 
@@ -35,9 +61,41 @@ function makeRouter() {
   });
 
   router.beforeEach(beforeEach);
-  router.afterEach(afterEach);
+  // router.afterEach(afterEach);
 
   return router;
+}
+
+/**
+ * Resolve components loading functional.
+ *
+ * @param  {Array} components - An array of component to resolve.
+ * @return {Array} - An array of resolved components with page loading.
+ */
+router.getMatchedComponents = (to) => {
+  // Extract the path from the route object
+  const { path } = to;
+  // Initialize an array to store the matched components
+  let matchedComponents = [];
+
+  // Iterate through the routes to find the matching component
+  routes.forEach(route => {
+    if (route.path === path) {
+      // If it matches, push the corresponding component to the array with function 'import page'
+      matchedComponents.push(page(route.component));
+    } else if (route.children) {
+      // Iterate through the children routes to find the matching component
+      route.children.forEach(childRoute => {
+        if (childRoute.path === path) {
+          // If children matches, push the corresponding component to the array with function 'import page'
+          matchedComponents.push(page(childRoute.component));
+        }
+      });
+    }
+  });
+  
+  // Return the array of matched components with functional of import page
+  return matchedComponents;
 }
 
 /**
@@ -49,12 +107,16 @@ function makeRouter() {
  */
 async function beforeEach(to, from, next) {
   let components = [];
-
+  console.log('Navigating from', from, 'to', to.path);
   try {
+    console.log('trying resolve', typeof router.getMatchedComponents({ ...to }));
     // Get the matched components and resolve them.
+
     components = await resolveComponents(
       router.getMatchedComponents({ ...to }),
     );
+    // components = await resolveComponents(routes);
+    console.log('Success resolve');
   } catch (error) {
     if (/^Loading( CSS)? chunk (\d)+ failed\./.test(error.message)) {
       window.location.reload(true);
@@ -65,6 +127,8 @@ async function beforeEach(to, from, next) {
   if (components.length === 0) {
     return next();
   }
+
+  console.log('components in beforeEach: ', components[0]);
 
   // Start the loading bar.
   // if (components[components.length - 1].loading !== false) {
@@ -90,11 +154,12 @@ async function beforeEach(to, from, next) {
  *
  * @param {Route} to
  * @param {Route} from
+ * We will use here our fetch user logic
  * @param {Function} next
  */
 async function afterEach(to, from, next) {
   await router.app.$nextTick();
-
+  return next();
   // router.app.$loading.finish()
 }
 
@@ -140,6 +205,7 @@ function callMiddleware(middleware, to, from, next) {
  * @return {Array}
  */
 function resolveComponents(components) {
+  // console.log('Component: ', components);
   return Promise.all(
     components.map((component) => {
       return typeof component === "function" ? component() : component;

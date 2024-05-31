@@ -29,7 +29,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'SettingsPage',
@@ -52,10 +52,14 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async update () {
       this.form.patch('/api/settings/password')
         .then(response => {
-          this.snackbar.open('Password has been changed')
+          this.triggerSnackbar('Password has been changed')
         })
     }
   }

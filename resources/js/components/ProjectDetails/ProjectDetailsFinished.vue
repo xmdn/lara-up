@@ -266,7 +266,7 @@
 <script>
 import * as timeago from 'timeago.js'
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 import ProjectCard from '~/components/ProjectCard'
 import ParticipantReview from '~/components/ProjectDetails/ParticipantReview'
@@ -439,6 +439,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async similarProjects () {
       await axios.get(`/api/project/${this.$route.params.id}/similar`)
         .then(({ data }) => {
@@ -466,7 +470,7 @@ export default {
         status: !isWished
       })
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$store.dispatch('auth/updateWishlists', {
             wishlists: data.wishlists
           })
@@ -478,7 +482,7 @@ export default {
             }
           }
         }).catch((e) => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
           this.$router.push({ name: 'login' })
           // console.log(error.response)
         })
@@ -511,7 +515,7 @@ export default {
       document.body.removeChild(el)
 
       this.copyText = 'Copied'
-      this.snackbar.open('Project link copied')
+      this.triggerSnackbar('Project link copied')
     },
 
     filterLink (link) {

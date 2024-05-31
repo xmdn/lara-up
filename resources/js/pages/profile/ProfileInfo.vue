@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import * as timeago from 'timeago.js'
 import ExperienceItem from '~/components/ExperienceItem'
 
@@ -226,6 +226,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     filterLink (link) {
       let filter = link.split('//')
       return filter[filter.length - 1]
@@ -242,7 +246,7 @@ export default {
       document.body.removeChild(el)
 
       this.copyText = 'Copied'
-      this.snackbar.open('Project link copied')
+      this.triggerSnackbar('Project link copied')
 
       setTimeout(() => {
         this.copyText = 'Copy'

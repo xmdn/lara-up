@@ -15,13 +15,13 @@ export const getters = {
   snackbar: state => state.snackbar,
   overlay: state => state.overlay,
   inbox: state => state.inbox,
-  projectbox: state => state.projectbox
+  projectbox: state => state.projectbox,
 }
 
 // mutations
 export const mutations = {
-  [types.ATTACH_SNACKBAR] (state, { snackbar }) {
-    state.snackbar = snackbar
+  [types.ATTACH_SNACKBAR](state, payload) {
+    state.snackbar = payload.message;
   },
 
   [types.FETCH_INBOX] (state, data) {
@@ -43,6 +43,7 @@ export const mutations = {
 
 // actions
 export const actions = {
+
   async attachSnackbar ({ commit }, payload) {
     try {
       commit(types.ATTACH_SNACKBAR, payload)

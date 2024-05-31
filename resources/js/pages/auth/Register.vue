@@ -136,7 +136,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'RegisterPage',
@@ -190,12 +190,16 @@ export default {
       }
     },
 
-    ...mapGetters({
-      snackbar: 'notification/snackbar'
-    })
+    // ...mapGetters({
+    //   snackbar: 'notification/snackbar'
+    // })
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async register () {
       // Register the user.
       const { data } = await this.form.post('/api/register')
@@ -203,7 +207,8 @@ export default {
       // Must verify email first.
       if (data.status) {
         this.mustVerifyEmail = true
-        this.snackbar.open(data.status)
+        this.triggerSnackbar(data.status )
+        console.log('Sended: ', data.status)
         this.$router.push({ name: 'verification.check', params: { email: this.form.email } })
       } else {
         // Log in the user.

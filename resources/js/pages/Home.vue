@@ -106,10 +106,12 @@
 
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import TopBoardList from '~/components/TopBoardList'
+console.log('HOME');
 
 export default {
+  
   name: 'HomePage',
 
   middleware: ['newcomer'],
@@ -133,14 +135,16 @@ export default {
   computed: {
     ...mapGetters({
       authenticated: 'auth/check',
-      snackbar: 'notification/snackbar'
+      // snackbar: 'notification/snackbar'
     })
   },
 
   mounted () {
+    // console.log('HOME MOUNT');
     this.appendNavBg()
+    
     this.getHomeData()
-
+    
     this.$nextTick(function () {
       const desktopNav = document.querySelector('.desktop-nav.nav-base');
       if (desktopNav === null) {
@@ -175,6 +179,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     appendNavBg () {
       let sheet = document.createElement('style')
       sheet.setAttribute('id', 'tempNavBg')

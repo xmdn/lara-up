@@ -1,6 +1,9 @@
+console.log('Initializing Vue App head');
 import Vue from 'vue'
+import { createApp } from "vue";
 import store from '~/store'
 import router from '~/router'
+// import router from '~/router/router'
 import App from '~/components/App'
 import Snackbar from 'vuejs-snackbar'
 
@@ -27,7 +30,9 @@ import '~/components'
 //   encrypted: false
 // })
 
+
 // LogRocket.init('i0tmx9/phive')
+console.log('Initializing Vue App');
 
 import VueMatchMedia from '@webqam/vue-match-media'
 const breakpoints = {
@@ -52,18 +57,21 @@ Vue.use(VueSocialSharing)
 Vue.use(Vue2TouchEvents)
 Vue.use(VueContentPlaceholders)
 Vue.use(VueExpandableImage)
-Vue.use(VueMatchMedia, { breakpoints })
+Vue.use(VueMatchMedia, { breakpoints: breakpoints })
 Vue.use(vueDebounce)
 // Vue.use(VueInputDropdown)
+
 
 Vue.component('snackbar', Snackbar)
 Vue.component('paginate', Paginate)
 
 Vue.config.productionTip = true
 
+
+
 /* eslint-disable no-new */
-new Vue({
-  store,
-  router,
-  ...App
-})
+// new Vue({
+//   store,
+//   router,
+//   render: h => h(App)
+// }).$mount('#app');

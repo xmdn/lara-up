@@ -354,7 +354,7 @@
 <script>
 import Form from 'vform'
 import { serialize } from 'object-to-formdata'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import RequirementItem from '~/components/RequirementItem'
 
 export default {
@@ -416,6 +416,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
 
     async getDetails () {
       await this.$store.dispatch('visit/fetchVisitedProject', {
@@ -442,7 +446,7 @@ export default {
         .then(({ data }) => {
           this.form.thumbnail = data.thumbnail
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 
@@ -453,7 +457,7 @@ export default {
         .then(({ data }) => {
           this.form.thumbnail = data.thumbnail
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 
@@ -473,7 +477,7 @@ export default {
       let skillSet = new Set(oldSkills)
 
       if (skillSet.size > 20) {
-        this.snackbar.open('Can\'t add more than 20 skills')
+        this.triggerSnackbar('Can\'t add more than 20 skills')
         return
       }
 
@@ -503,10 +507,10 @@ export default {
 
       this.form.submit('post', '/api/project/' + this.project.project_url + '/save')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$router.push({ name: 'projectbox' })
         }).catch(e => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
         })
     },
 

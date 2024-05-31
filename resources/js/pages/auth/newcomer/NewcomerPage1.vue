@@ -168,7 +168,7 @@
 <script>
 import Form from 'vform'
 import { serialize } from 'object-to-formdata'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 // import snarkdown from 'snarkdown'
 
 export default {
@@ -204,6 +204,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getUser () {
       this.form.user = this.data
 
@@ -227,7 +231,7 @@ export default {
             avatar: data.avatar
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 
@@ -238,7 +242,7 @@ export default {
             avatar: data.avatar
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 

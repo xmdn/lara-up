@@ -107,7 +107,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -145,6 +145,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getDetails () {
       await axios.get(`/api` + this.$route.path)
         .then(({ data }) => {
@@ -162,10 +166,10 @@ export default {
     async postReview () {
       this.form.submit('post', `/api/project/${this.detail.project.project_url}/review`)
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$router.push({ name: 'projectbox' })
         }).catch(e => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
         })
     }
   }

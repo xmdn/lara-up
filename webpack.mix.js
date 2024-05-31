@@ -122,7 +122,7 @@ const serviceWorkerConfig = {
 }
 
 mix
-  .js('resources/js/app.js', 'public/dist/js')
+  .js('resources/js/app.js', 'public/dist/js/app.js')
   .vue({
     extractStyles: true
   })

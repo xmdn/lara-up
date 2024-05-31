@@ -39,7 +39,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -120,6 +120,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async showDetails () {
       this.show = !this.show
     },
@@ -131,7 +135,7 @@ export default {
 
       await this.form.post('/api/projectbox/confirmation')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$store.dispatch('notification/updateProjectBox', {
             projectBoxes: data.project_boxes
           })

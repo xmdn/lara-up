@@ -92,7 +92,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ApplyTeamPage',
@@ -130,6 +130,11 @@ export default {
 
   methods: {
 
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
+
     addMember () {
       this.form.team.push({ expertise: '', tagname: '' })
     },
@@ -147,13 +152,13 @@ export default {
     async submitTeam () {
       await this.form.post('/api' + this.$route.path)
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
         .then(e => {
           this.$router.push({ path: `/project/${this.$route.params.id}` })
         })
         .catch(e => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
         })
     }
 

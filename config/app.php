@@ -43,6 +43,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Additional TTL config
+    |--------------------------------------------------------------------------
+    |
+    | Your application have default Time-To-Live amount of time and this amount 
+    | of time which will live JWT token, this token will not provide access to 
+    | autheticated session after living this amount of time.
+    |
+    */
+    
+    'jwt_ttl' => env('JWT_TTL', 3600),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

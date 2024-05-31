@@ -62,7 +62,7 @@
 
 <script>
 import Form from 'vform'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'IndexItemAcceptProject',
@@ -86,6 +86,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     showDetails () {
       this.show = !this.show
     },
@@ -97,7 +101,7 @@ export default {
 
       await this.form.post('/api/inbox/invitation/project')
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
           this.$store.dispatch('notification/updateInbox', {
             inbox: data.inboxes
           })

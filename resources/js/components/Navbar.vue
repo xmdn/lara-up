@@ -53,7 +53,7 @@
             <router-link :to="{ name: 'register' }" class="btn btn--link" tag="button">
               Create an Account
             </router-link>
-
+            
             <router-link :to="{ name: 'login' }" class="btn btn--border btn--sign-in" tag="button">
               Sign In
             </router-link>
@@ -170,6 +170,9 @@
               <router-link :to="{ name: 'login' }" class="btn btn--blue " tag="button">
                 Sign In
               </router-link>
+              <button class="btn--clear btn-text--decline" @click="logout">
+                    Logout
+                  </button>
 
               <router-link :to="{ name: 'register' }" class="btn btn--white mt-1_5" tag="button">
                 Create an Account
@@ -209,6 +212,7 @@ export default {
 
     points () {
       if (this.user && this.user.leaderboards) {
+        console.log('USER BOARD: ', this.user)
         return this.user.leaderboards.filter(e => e.expertise === this.user.expertise)[0].points + ' Points'
       }
 
@@ -253,7 +257,9 @@ export default {
   },
 
   mounted () {
+    console.log('LOADED : ', this.user);
     if (this.user && this.user.new_notifications_count > 0) {
+      
       this.$nextTick(function () {
         setTimeout(() => {
           document.querySelector('[d^="M374"]').style.color = 'red'

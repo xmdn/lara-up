@@ -3,6 +3,9 @@ FROM node:latest as frontend
 
 WORKDIR /app
 
+# # Install Node.js and npm
+# RUN apt-get update && apt-get install -y nodejs npm
+
 COPY package*.json ./
 
 RUN npm install
@@ -12,7 +15,7 @@ COPY . .
 RUN npm run build:dev
 
 # Stage 2: Build Laravel backend
-FROM php:8.1-fpm as backend
+FROM php:8.2-fpm as backend
 
 WORKDIR /app
 

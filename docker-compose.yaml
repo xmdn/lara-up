@@ -4,7 +4,9 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "8033:8000"
+    volumes:
+      - .:/app
     depends_on:
       - db
 
@@ -14,5 +16,5 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: phivedb
     ports:
-      - "3306:3306"
+      - "3314:3306"
     restart: unless-stopped

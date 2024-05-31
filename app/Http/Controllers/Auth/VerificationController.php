@@ -46,6 +46,10 @@ class VerificationController extends Controller
 
         event(new Verified($user));
 
+        // I would prefer for verified user return token, token_type and expires_in.
+        // As we do in LoginController, but leave this as it is (bc typing same login and pass two times is not good user experience).
+        // And do as done here in the case when an important part of the uniqueness of the account, for example, the phone number is used for registration.
+
         return response()->json([
             'status' => trans('verification.verified'),
         ]);

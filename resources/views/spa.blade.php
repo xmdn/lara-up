@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#FFFFFF">
 </head>
 <body>
+
   <div id="app"></div>
   <script src="{{ mix('dist/js/app.js') }}"></script>
   <script src="/iconify.min.js"></script>

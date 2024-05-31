@@ -33,6 +33,7 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {
         $token = $this->guard()->attempt($this->credentials($request));
+        $remember = $request->input('remember', false);
 
         if (! $token) {
             return false;
@@ -41,6 +42,19 @@ class LoginController extends Controller
         $user = $this->guard()->user();
         if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
             return false;
+        }
+
+        $defaultTTL = config('app.jwt_ttl');
+
+        // Set token expiration based on remember me
+        if ($remember) {
+            $real_exp = (int) $defaultTTL;
+            // Extend the TTL for "remember me"
+            $this->guard()->factory()->setTTL($real_exp * 6); // Assuming x6 the 'remember me' TTL
+        } else {
+            $real_exp = (int) $defaultTTL;
+            // Use the default TTL for regular login
+            $this->guard()->factory()->setTTL($real_exp);
         }
 
         $this->guard()->setToken($token);

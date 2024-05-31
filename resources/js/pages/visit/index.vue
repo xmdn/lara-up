@@ -91,7 +91,7 @@
 
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'VisitedUserIndex',
@@ -141,6 +141,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getUser () {
       await this.$store.dispatch('visit/fetchVisitedUser', {
         tagname: this.$route.params.tagname
@@ -159,7 +163,7 @@ export default {
       if (this.user) {
         axios.post(`/api/user/${this.data.user.tagname}/invite/team`)
           .then(({ data }) => {
-            this.snackbar.open(data.message)
+            this.triggerSnackbar(data.message)
           })
       } else {
         this.$router.push({ name: 'login' })
@@ -168,7 +172,7 @@ export default {
 
     showOwnProjects () {
       if (this.ownProjects === null || this.ownProjects.length === 0) {
-        this.snackbar.open("You don't have any projects yet")
+        this.triggerSnackbar("You don't have any projects yet")
       } else {
         this.inviteTo = this.hiringProjects[0].id
         this.$refs.listOwnProjects.openModal()
@@ -181,11 +185,11 @@ export default {
           project_id: this.inviteTo
         })
           .then(({ data }) => {
-            this.snackbar.open(data.message)
+            this.triggerSnackbar(data.message)
             this.$refs.listOwnProjects.closeModal()
           })
           .catch((error) => {
-            this.snackbar.open(error.response.data.message)
+            this.triggerSnackbar(error.response.data.message)
           })
       } else {
         this.$router.push({ name: 'login' })

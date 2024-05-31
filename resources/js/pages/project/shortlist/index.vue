@@ -60,7 +60,7 @@
 
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ShortlistIndex',
@@ -96,6 +96,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getShortlist () {
       await this.$store.dispatch('page/fetchShortlist', {
         project_url: this.$route.params.id
@@ -117,7 +121,7 @@ export default {
         'teams': acceptedStudents.teams
       })
         .then(({ data }) => {
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
 
           this.$store.dispatch('notification/updateProjectBox', {
             projectBoxes: data.project_boxes

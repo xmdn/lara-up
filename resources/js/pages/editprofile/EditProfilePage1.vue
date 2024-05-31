@@ -169,7 +169,7 @@
 <script>
 import Form from 'vform'
 import { serialize } from 'object-to-formdata'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'EditProfile1Page',
@@ -204,6 +204,10 @@ export default {
   },
 
   methods: {
+    ...mapActions('notification', ['attachSnackbar']), // Map the action
+    triggerSnackbar(message) {
+      this.attachSnackbar({ message }); // Dispatch the action
+    },
     async getUser () {
       this.form.user = this.data
     },
@@ -225,10 +229,10 @@ export default {
             avatar: data.avatar
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
         .catch(e => {
-          this.snackbar.open(e.response.data.message)
+          this.triggerSnackbar(e.response.data.message)
         })
     },
 
@@ -239,7 +243,7 @@ export default {
             avatar: data.avatar
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     },
 
@@ -252,7 +256,7 @@ export default {
             user: data.user
           })
 
-          this.snackbar.open(data.message)
+          this.triggerSnackbar(data.message)
         })
     }
   }
