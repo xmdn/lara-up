@@ -74,9 +74,12 @@ class UserController extends Controller
             $userAuth->photo_url = $imgName;
             $userAuth->save();
 
+            // Return the absolute URL using the getAvatarAttribute() method
+            $avatarUrl = $userAuth->getAvatarAttribute();
+
             return response()->json([
                 'message' => 'Photo has been Changed',
-                'avatar' => 'storage/images/avatar/' . $imgName
+                'avatar' => $avatarUrl
                 ]);
         }
     }
