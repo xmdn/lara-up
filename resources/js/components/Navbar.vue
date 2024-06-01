@@ -170,10 +170,6 @@
               <router-link :to="{ name: 'login' }" class="btn btn--blue " tag="button">
                 Sign In
               </router-link>
-              <button class="btn--clear btn-text--decline" @click="logout">
-                    Logout
-                  </button>
-
               <router-link :to="{ name: 'register' }" class="btn btn--white mt-1_5" tag="button">
                 Create an Account
               </router-link>
