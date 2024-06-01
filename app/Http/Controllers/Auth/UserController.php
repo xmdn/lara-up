@@ -89,7 +89,7 @@ class UserController extends Controller
         $userAuth = $request->user();
 
             if ($userAuth->photo_url) {
-                $path = storage_path() . '/app/public/images/avatar/' . $userAuth->photo_url;
+                $path = public_path() . 'storage/images/avatar/' . $userAuth->photo_url;
                 if (file_exists($path)) unlink($path);
             }
 
