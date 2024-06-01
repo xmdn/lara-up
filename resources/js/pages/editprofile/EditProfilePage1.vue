@@ -225,6 +225,7 @@ export default {
         }]
       })
         .then(({ data }) => {
+          
           this.$store.dispatch('auth/updateAvatar', {
             avatar: data.avatar
           })

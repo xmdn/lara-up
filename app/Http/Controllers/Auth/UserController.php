@@ -63,11 +63,11 @@ class UserController extends Controller
             $image = $request->file('file');
             $extension = $image->extension();
             $imgName = $this->generateRandomString(25) . '.' . $extension;
-            $destinationPath = storage_path('app/public/images/avatar');
+            $destinationPath = public_path('storage/images/avatar');
             $image->move($destinationPath, $imgName);
 
             if ($userAuth->photo_url) {
-                $path = storage_path() . '/app/public/images/avatar/' . $userAuth->photo_url;
+                $path = public_path() . 'storage/images/avatar/' . $userAuth->photo_url;
                 if (file_exists($path)) unlink($path);
             }
 
@@ -76,7 +76,7 @@ class UserController extends Controller
 
             return response()->json([
                 'message' => 'Photo has been Changed',
-                'avatar' => '/storage/images/avatar/' . $imgName
+                'avatar' => 'storage/images/avatar/' . $imgName
                 ]);
         }
     }

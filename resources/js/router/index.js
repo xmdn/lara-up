@@ -9,8 +9,6 @@ import VueMatchMedia from '@webqam/vue-match-media'
 import Snackbar from 'vuejs-snackbar'
 
 
-console.log('INDEX');
-
 const app = createApp(App);
 
 // console.log('ROUTE', useRoute());
@@ -107,16 +105,12 @@ router.getMatchedComponents = (to) => {
  */
 async function beforeEach(to, from, next) {
   let components = [];
-  console.log('Navigating from', from, 'to', to.path);
   try {
-    console.log('trying resolve', typeof router.getMatchedComponents({ ...to }));
     // Get the matched components and resolve them.
 
     components = await resolveComponents(
       router.getMatchedComponents({ ...to }),
     );
-    // components = await resolveComponents(routes);
-    console.log('Success resolve');
   } catch (error) {
     if (/^Loading( CSS)? chunk (\d)+ failed\./.test(error.message)) {
       window.location.reload(true);

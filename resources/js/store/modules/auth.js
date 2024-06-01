@@ -38,7 +38,8 @@ export const mutations = {
 
   [types.FETCH_USER_FAILURE] (state) {
     state.token = null
-    Cookies.remove('token')
+    state.user = null
+    state.data = null
   },
 
   [types.FETCH_USER_PARTY] (state, { leader, member }) {

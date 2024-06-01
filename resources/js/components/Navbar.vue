@@ -207,7 +207,7 @@ export default {
     },
 
     points () {
-      if (this.user && this.user.leaderboards) {
+      if (this.user && this.user.leaderboards && this.user.leaderboards.length > 0) {
         console.log('USER BOARD: ', this.user)
         return this.user.leaderboards.filter(e => e.expertise === this.user.expertise)[0].points + ' Points'
       }
@@ -252,8 +252,7 @@ export default {
     }
   },
 
-  mounted () {
-    console.log('LOADED : ', this.user);
+  async mounted () {
     if (this.user && this.user.new_notifications_count > 0) {
       
       this.$nextTick(function () {

@@ -10,13 +10,10 @@
     <transition name="page" mode="out-in">
       <component :is="layout" v-if="layout" />
     </transition>
-    <input type="text" v-model="inputText" placeholder="Enter message" />
-    <button @click="triggerSnackbar">Show Snackbar</button>
   </div>
 </template>
 
 <script>
-console.log('App.vue script!');
 // import Loading from './Loading'
 import { useRoute } from 'vue-router';
 import { loadProgressBar } from 'axios-progress-bar'
@@ -50,21 +47,9 @@ export default {
       // snack: 'notification/snack'
     })
   },
-  // setup() {
-  //   const route = useRoute();
-  //   console.log('Component Route:', route.value); // Access route information
-
-  //   // Your other component logic here
-
-  //   return {
-  //     route
-  //   };
-  // },
-
   data: () => ({
     layout: null,
-    defaultLayout: 'default',
-    inputText: ''
+    defaultLayout: 'default'
   }),
 
   metaInfo () {
@@ -77,41 +62,13 @@ export default {
   },
 
   mounted () {
-    // this.$refs.snackbar.info('msg');
-    // this.$store.commit('notification/ATTACH_SNACKBAR', 'Test message' );
-    // this.$store.dispatch('notification/attachSnackbar', { message: 'Test message', show: true });
     this.fetchUserData(); // Call the async function
     this.initStore();
-    // const route = useRoute();
-    // console.log('APP ROUTE', route);
-    // console.log('STORE', this.$store);
-    // this.$store.dispatch('notification/attachSnackbar', {
-    //   snackbar: this.$refs.snackbar
-    // })
     this.setLayout();
   },
   
 
   methods: {
-    
-    showSnackbar() {
-      this.$nextTick(() => {
-        if (this.$refs.snackbar) {
-          this.$refs.snackbar.open(this.snackbar);
-        } else {
-          console.error('Snackbar component not found.');
-        }
-      });
-    },
-
-
-    triggerSnackbar() {
-      const message = this.inputText.trim(); // Get the trimmed message from the input
-      if (message) {
-        this.$store.dispatch('notification/attachSnackbar', { message });
-        this.inputText = '';
-      }
-    },
     async initStore() {
       // Assuming the store might be asynchronously loaded
       while (!this.$store) {
@@ -134,7 +91,6 @@ export default {
     async fetchUserData() {
       try {
         await this.$store.dispatch('auth/fetchUser');
-        console.log('User fetched successfully');
       } catch (error) {
         console.error('Error fetching user:', error);
       }

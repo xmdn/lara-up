@@ -1,4 +1,3 @@
-console.log('Initializing Vue App head');
 import Vue from 'vue'
 import { createApp } from "vue";
 import store from '~/store'
@@ -32,7 +31,6 @@ import '~/components'
 
 
 // LogRocket.init('i0tmx9/phive')
-console.log('Initializing Vue App');
 
 import VueMatchMedia from '@webqam/vue-match-media'
 const breakpoints = {

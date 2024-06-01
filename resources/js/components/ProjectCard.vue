@@ -83,7 +83,7 @@
 <script>
 import * as timeago from 'timeago.js'
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ProjectCard',
